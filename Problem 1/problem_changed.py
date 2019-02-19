@@ -1,4 +1,4 @@
-import operator
+gir import operator
 from itertools import permutations
 
 '''def main():

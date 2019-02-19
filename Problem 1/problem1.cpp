@@ -19,13 +19,40 @@ typedef struct pairs{
 
 int n_devices;
 int n_colliders;
+
  
- 
- 
+
 void main_function(int devices, int index){
    
 }
+
+
  
+void permute(vector<vector<int> > v, int l, int r,int count) 
+{ 
+   int i; 
+   
+   if (l == r) {
+    
+    for (vector<int> e: v) {
+       
+        cout << "(" << e[0]<<","<<e[1]<<")"<<endl;
+    }
+    cout << endl;
+    cout<<count<<endl;
+    
+    }
+   else
+   { 
+       for (i = l; i <= r; i++) 
+       { 
+          swap(v[l], v[i]); 
+          permute(v, l+1, r,count++); 
+          swap(v[l], v[i]); //backtrack 
+       } 
+   } 
+} 
+
 int main(){
     int i;
     int x;
@@ -76,6 +103,7 @@ int main(){
     }
     cout<<"End of Pairs of Source and Targets"<<endl;
     cout<<" "<<endl;
- 
+     int count=1;
+     permute(coord_vector, 0, n_places-1,count); 
     return 0;
 }
