@@ -5,28 +5,9 @@
 //g++ -Wall -std=c++11 problem1.cpp -o problem1
  
 using namespace std;
- 
-typedef struct coordinates{
-    int x;
-    int y;
-    int device;
-}Coordinates;
- 
-typedef struct pairs{
-    int source_device;
-    int target_device;
-}Pairs;
 
 int n_devices;
 int n_colliders;
-
- 
-
-void main_function(int devices, int index){
-   
-}
-
-
  
 void permute(vector<vector<int> > v, int l, int r,int count,int k,int index) 
 { 
@@ -34,9 +15,9 @@ void permute(vector<vector<int> > v, int l, int r,int count,int k,int index)
    count++;
    if (l == r) {
     
-    for (vector<int> e: v) {
+    for (int i=0; i< k; i++) {
        
-        cout << "(" << e[0]<<","<<e[1]<<")"<<endl;
+        cout << "(" << v[i][0]<<","<<v[i][1]<<")"<<endl;
     }
     cout << endl;
     cout<<count<<endl;
@@ -51,7 +32,30 @@ void permute(vector<vector<int> > v, int l, int r,int count,int k,int index)
           swap(v[l], v[i]); //backtrack 
        } 
    } 
-} 
+}
+//n is vector size, k is arrangement size
+void permute2(vector<vector<int>> v, int n, int k, vector<vector<vector<int>>>solutions)
+{
+   if (k == 0) {
+       vector<vector<int>>permut;
+        for (int i=n; i< v.size(); i++) {
+            permut.push_back(v.at(i));
+        }
+        for(int m=0; m<permut.size(); m++){
+            cout<<permut[m][0]<<" "<<permut[m][1]<<endl;
+        }
+        cout<<endl;
+        solutions.push_back(permut);
+        return;
+    }
+    for (int j=0; j< n; j++)
+    { 
+        swap(v[j], v[n-1]); 
+        permute2(v, n-1, k-1, solutions);
+        swap(v[j], v[n-1]); //backtrack 
+    }
+}
+
 
 int main(){
     int i;
@@ -104,6 +108,9 @@ int main(){
     cout<<"End of Pairs of Source and Targets"<<endl;
     cout<<" "<<endl;
      int count=1;
-     permute(coord_vector, 0, n_places-1,count,n_devices,0); 
+     //permute(coord_vector, 0, n_places-1,count,n_devices,0);
+     vector<vector<vector<int>>>solutions;
+     permute2(coord_vector, coord_vector.size(), n_devices, solutions);
+     cout<<"sol size is: "<<solutions.size()<<endl;
     return 0;
 }
