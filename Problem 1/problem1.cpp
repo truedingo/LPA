@@ -28,10 +28,10 @@ void main_function(int devices, int index){
 
 
  
-void permute(vector<vector<int> > v, int l, int r,int count) 
+void permute(vector<vector<int> > v, int l, int r,int count,int k,int index) 
 { 
    int i; 
-   
+   count++;
    if (l == r) {
     
     for (vector<int> e: v) {
@@ -44,10 +44,10 @@ void permute(vector<vector<int> > v, int l, int r,int count)
     }
    else
    { 
-       for (i = l; i <= r; i++) 
+       for (i = l; i <= r && r-i+1>=k-index; i++) 
        { 
           swap(v[l], v[i]); 
-          permute(v, l+1, r,count++); 
+          permute(v, l+1, r,count,k,index+1); 
           swap(v[l], v[i]); //backtrack 
        } 
    } 
@@ -104,6 +104,6 @@ int main(){
     cout<<"End of Pairs of Source and Targets"<<endl;
     cout<<" "<<endl;
      int count=1;
-     permute(coord_vector, 0, n_places-1,count); 
+     permute(coord_vector, 0, n_places-1,count,n_devices,0); 
     return 0;
 }
