@@ -9,49 +9,27 @@ using namespace std;
 int n_devices;
 int n_colliders;
  
-void permute(vector<vector<int> > v, int l, int r,int count,int k,int index) 
-{ 
-   int i; 
-   count++;
-   if (l == r) {
-    
-    for (int i=0; i< k; i++) {
-       
-        cout << "(" << v[i][0]<<","<<v[i][1]<<")"<<endl;
-    }
-    cout << endl;
-    cout<<count<<endl;
-    
-    }
-   else
-   { 
-       for (i = l; i <= r && r-i+1>=k-index; i++) 
-       { 
-          swap(v[l], v[i]); 
-          permute(v, l+1, r,count,k,index+1); 
-          swap(v[l], v[i]); //backtrack 
-       } 
-   } 
-}
 //n is vector size, k is arrangement size
-void permute2(vector<vector<int>> v, int n, int k, vector<vector<vector<int>>>solutions)
+void permute(vector<vector<int> > v, int n, int k, vector<vector<vector<int> > >solutions)
 {
    if (k == 0) {
-       vector<vector<int>>permut;
+       vector<vector<int> >permut;
         for (int i=n; i< v.size(); i++) {
-            permut.push_back(v.at(i));
+            permut.push_back(v[i]);
+           
+            
         }
         for(int m=0; m<permut.size(); m++){
             cout<<permut[m][0]<<" "<<permut[m][1]<<endl;
         }
         cout<<endl;
         solutions.push_back(permut);
-        return;
+        
     }
     for (int j=0; j< n; j++)
     { 
         swap(v[j], v[n-1]); 
-        permute2(v, n-1, k-1, solutions);
+        permute(v, n-1, k-1, solutions);
         swap(v[j], v[n-1]); //backtrack 
     }
 }
@@ -66,9 +44,9 @@ int main(){
     int n_places;
 
     cin >> n_places;
-    vector<vector<int>> coord_vector;
+    vector<vector<int> > coord_vector;
     vector<int> coordinates;
-    vector<vector<int>> pairs_vector;
+    vector<vector<int> > pairs_vector;
     vector<int> pairs;
 
     for(i=0; i<n_places; i++){
@@ -109,8 +87,8 @@ int main(){
     cout<<" "<<endl;
      int count=1;
      //permute(coord_vector, 0, n_places-1,count,n_devices,0);
-     vector<vector<vector<int>>>solutions;
-     permute2(coord_vector, coord_vector.size(), n_devices, solutions);
+     vector<vector<vector<int> > >solutions;
+     permute(coord_vector, coord_vector.size(), n_devices, solutions);
      cout<<"sol size is: "<<solutions.size()<<endl;
     return 0;
 }
