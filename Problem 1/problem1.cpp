@@ -22,7 +22,7 @@ void permute(vector<vector<int> > v, int n_places, int k_devices)
             
         }
         for(int m=0; m<permut.size(); m++){
-            cout<<permut[m][0]<<" "<<permut[m][1]<<" ";
+            cout<<"("<<permut[m][0]<<" "<<permut[m][1]<<")"<<" ";
         }
         cout<<endl;
         //solutions.push_back(permut);
