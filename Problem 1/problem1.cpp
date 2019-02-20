@@ -10,13 +10,22 @@ using namespace std;
 using namespace std::chrono;
 int n_devices;
 int n_colliders;
- 
-//n is vector size, k is arrangement size
-void permute(vector<vector<int> > v, int n_places, int k_devices)
+int i;
+int x;
+int y;
+int source_device;
+int target_device;
+int n_places;
+vector<vector<int> > coord_vector;
+vector<int> coordinates;
+vector<int>pairs_vector;
+
+//permute uses vector size and number of devices
+void permute(vector<vector<int> > v, int n_places, int n_devices)
 {
-   if (k_devices == 0) {
+   if (n_devices == 0) {
        vector<vector<int> >permut;
-        for (int i=n_places; i< v.size(); i++) {
+        for (int i=n_places; i< coord_vector.size(); i++) {
             permut.push_back(v[i]);
            
             
@@ -25,31 +34,31 @@ void permute(vector<vector<int> > v, int n_places, int k_devices)
             cout<<permut[m][0]<<" "<<permut[m][1]<<" ";
         }
         cout<<endl;
-        //solutions.push_back(permut);
-        
     }
     for (int j=0; j< n_places; j++)
     { 
-        swap(v[j], v[n_places-1]); 
-        permute(v, n_places-1, k_devices-1);
+        swap(coord_vector[j], coord_vector[n_places-1]); 
+        permute(coord_vector, n_places-1, n_devices-1);
         swap(v[j], v[n_places-1]); //backtrack 
     }
 }
 
+vector<vector<int>> makeConnections(vector<vector<int>>connVector){
+	for(int i=0; i<connVector.size(); i++){
+        connVector[i] = coord_vector[pairs_vector[i]-1];
+    }
+    return connVector;
+}
+
+void printConnectionVector(vector<vector<int>>connVector){
+    for(int i=0; i<connVector.size(); i++){
+        cout<<"("<<connVector[i][0]<<","<<connVector[i][1]<<")"<<" ";
+    }
+}
 
 int main(){
-    int i;
-    int x;
-    int y;
-    int source_device;
-    int target_device;
-    int n_places;
    
     cin >> n_places;
-    vector<vector<int> > coord_vector;
-    vector<int> coordinates;
-    vector<vector<int> > pairs_vector;
-    vector<int> pairs;
 
     for(i=0; i<n_places; i++){
         cin>>x>>y;
@@ -73,24 +82,28 @@ int main(){
 
     for(i=0;i<n_colliders;i++){
         cin>>source_device>>target_device;
-        pairs.push_back(source_device);
-        pairs.push_back(target_device);
-        pairs_vector.push_back(pairs);
-        pairs.clear();
+        pairs_vector.push_back(source_device);
+        pairs_vector.push_back(target_device);
  
     }
     cout<<"Pairs of Source and Targets: "<<endl;
     cout<<" "<<endl;
 
     for(i=0; i<pairs_vector.size(); i++){
-        cout<< "Source: "<<pairs_vector[i][0] << " Target: " <<pairs_vector[i][1]<<endl;
+        cout<< "Source: "<<pairs_vector[i]<< " Target: " <<pairs_vector[i]<<endl;
     }
     cout<<"End of Pairs of Source and Targets"<<endl;
     cout<<" "<<endl;
 
-    //vector<vector<vector<int> > >solutions;
-    auto start = high_resolution_clock::now(); 
+
+    auto start = high_resolution_clock::now();
+
     permute(coord_vector, coord_vector.size(), n_devices);
+
+    vector<vector<int>>connection_vector(pairs_vector.size(), vector<int>(2,0));
+    connection_vector = makeConnections(connection_vector);
+	printConnectionVector(connection_vector);
+
     auto stop = high_resolution_clock::now(); 
     auto duration = duration_cast<microseconds>(stop - start); 
     cout << duration.count() * pow(10,-6)<<" seconds"<< endl; 

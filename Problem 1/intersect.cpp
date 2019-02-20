@@ -75,7 +75,7 @@ bool doIntersect(Point p1, Point q1, Point p2, Point q2)
 
 vector<vector<int>> makeConnections(vector<vector<int>> coord_vector, vector<int> pairs_vector, vector<vector<int>>connVector){
 	for(int i=0; i<connVector.size(); i++){
-        connVector[i]= coord_vector[pairs_vector[i]-1];
+        connVector[i] = coord_vector[pairs_vector[i]-1];
     }
     return connVector;
 }
