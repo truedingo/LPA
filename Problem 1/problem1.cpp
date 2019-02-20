@@ -2,35 +2,37 @@
 #include <string>
 #include <vector>
 #include <array>
+#include <chrono> 
+#include <math.h> 
 //g++ -Wall -std=c++11 problem1.cpp -o problem1
  
 using namespace std;
-
+using namespace std::chrono;
 int n_devices;
 int n_colliders;
  
 //n is vector size, k is arrangement size
-void permute(vector<vector<int> > v, int n, int k, vector<vector<vector<int> > >solutions)
+void permute(vector<vector<int> > v, int n_places, int k_devices)
 {
-   if (k == 0) {
+   if (k_devices == 0) {
        vector<vector<int> >permut;
-        for (int i=n; i< v.size(); i++) {
+        for (int i=n_places; i< v.size(); i++) {
             permut.push_back(v[i]);
            
             
         }
         for(int m=0; m<permut.size(); m++){
-            cout<<permut[m][0]<<" "<<permut[m][1]<<endl;
+            cout<<permut[m][0]<<" "<<permut[m][1]<<" ";
         }
         cout<<endl;
-        solutions.push_back(permut);
+        //solutions.push_back(permut);
         
     }
-    for (int j=0; j< n; j++)
+    for (int j=0; j< n_places; j++)
     { 
-        swap(v[j], v[n-1]); 
-        permute(v, n-1, k-1, solutions);
-        swap(v[j], v[n-1]); //backtrack 
+        swap(v[j], v[n_places-1]); 
+        permute(v, n_places-1, k_devices-1);
+        swap(v[j], v[n_places-1]); //backtrack 
     }
 }
 
@@ -42,7 +44,7 @@ int main(){
     int source_device;
     int target_device;
     int n_places;
-
+   
     cin >> n_places;
     vector<vector<int> > coord_vector;
     vector<int> coordinates;
@@ -85,10 +87,12 @@ int main(){
     }
     cout<<"End of Pairs of Source and Targets"<<endl;
     cout<<" "<<endl;
-     int count=1;
-     //permute(coord_vector, 0, n_places-1,count,n_devices,0);
-     vector<vector<vector<int> > >solutions;
-     permute(coord_vector, coord_vector.size(), n_devices, solutions);
-     cout<<"sol size is: "<<solutions.size()<<endl;
+
+    //vector<vector<vector<int> > >solutions;
+    auto start = high_resolution_clock::now(); 
+    permute(coord_vector, coord_vector.size(), n_devices);
+    auto stop = high_resolution_clock::now(); 
+    auto duration = duration_cast<microseconds>(stop - start); 
+    cout << duration.count() * pow(10,-6)<<" seconds"<< endl; 
     return 0;
 }
