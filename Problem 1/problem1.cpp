@@ -104,26 +104,51 @@ bool doIntersect(vector<int> p1, vector<int> q1, vector<int> p2, vector<int> q2)
     int o3 = orientation(p2, q2, p1);
     int o4 = orientation(p2, q2, q1);
 
+    // Caso de colinearidade entre target points do professor
+    if(p1 == p2 or p1 == q2 or q1 == p2 or q1 == q2){
+        cout<<"ENTREI AQUI!"<<endl;
+        return false;
+    }
     // General case
-    if (o1 != o2 && o3 != o4)
+    if (o1 != o2 && o3 != o4){
+        cout<<"BASE CASE 1"<<endl;
+        cout<<"("<<p1[0]<<","<<p1[1]<<")"<<" "<<"("<<q1[0]<<","<<q1[1]<<")"<<endl;
+        cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;
         return true;
+    }
 
     // Special Cases
     // p1, q1 and p2 are colinear and p2 lies on segment p1q1
-    if (o1 == 0 && onSegment(p1, p2, q1))
-        return true;
+    if (o1 == 0 && onSegment(p1, p2, q1)){
+        cout<<"BASE CASE 1"<<endl;
+        cout<<"("<<p1[0]<<","<<p1[1]<<")"<<" "<<"("<<q1[0]<<","<<q1[1]<<")"<<endl;
+        cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;
+        return false;
+    }
 
     // p1, q1 and q2 are colinear and q2 lies on segment p1q1
-    if (o2 == 0 && onSegment(p1, q2, q1))
-        return true;
+    if (o2 == 0 && onSegment(p1, q2, q1)){
+        cout<<"BASE CASE 2"<<endl;
+        cout<<"("<<p1[0]<<","<<p1[1]<<")"<<" "<<"("<<q1[0]<<","<<q1[1]<<")"<<endl;
+        cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;
+        return false;
+    }
 
     // p2, q2 and p1 are colinear and p1 lies on segment p2q2
-    if (o3 == 0 && onSegment(p2, p1, q2))
-        return true;
+    if (o3 == 0 && onSegment(p2, p1, q2)){
+        cout<<"BASE CASE 3"<<endl;
+        cout<<"("<<p1[0]<<","<<p1[1]<<")"<<" "<<"("<<q1[0]<<","<<q1[1]<<")"<<endl;
+        cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;
+        return false;
+    }
 
     // p2, q2 and q1 are colinear and q1 lies on segment p2q2
-    if (o4 == 0 && onSegment(p2, q1, q2))
-        return true;
+    if (o4 == 0 && onSegment(p2, q1, q2)){
+        cout<<"BASE CASE 4"<<endl;
+        cout<<"("<<p1[0]<<","<<p1[1]<<")"<<" "<<"("<<q1[0]<<","<<q1[1]<<")"<<endl;
+        cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;
+        return false;
+    }
 
     return false; // Doesn't fall in any of the above cases
 }
@@ -161,14 +186,14 @@ void n_intersect(vector<vector<int>> points, int iterations)
         //reta actual
         //ponto 2
         vector<int> p1;
-        p1.push_back(points[ind][0]);
-        p1.push_back(points[ind][1]);
+        p1.push_back(points[ind-1][0]);
+        p1.push_back(points[ind-1][1]);
         cout << "P1- x: " << p1[0] << " y: " << p1[1] << endl;
 
         //ponto1
         vector<int> p2;
-        p2.push_back(points[ind - 1][0]);
-        p2.push_back(points[ind - 1][1]);
+        p2.push_back(points[ind][0]);
+        p2.push_back(points[ind][1]);
         cout << "P2 - x: " << p2[0] << " y: " << p2[1] << endl;
 
         int i;
@@ -180,15 +205,14 @@ void n_intersect(vector<vector<int>> points, int iterations)
 
                 // aqui so queremos os indices impares para se poder sempre ir buscar o anterior
                 if (i % 2 != 0)
-                {
-                    cout << "p1[0]: "<<p1[0]<<" p1[1]:"<<p1[1]<<endl;
-                    cout << "p2[0]: "<<p2[0]<<" p2[1]:"<<p2[1]<<endl;
+                {   cout<<"p1: ("<<p1[0]<<","<<p1[1]<<")"<<endl;
+                    cout<<"p2: ("<<p2[0]<<","<<p2[1]<<")"<<endl;
                     cout << "intersected with"<<endl;
-                    cout << "test[i][0]: "<<test[i][0]<<" test[i][1]:"<<test[i][1]<<endl;
-                    cout << "test[i-1][0]: "<<test[i-1][0]<<" test[i-1][1]:"<<test[i-1][1]<<endl;
-
-                    if (doIntersect(p1, test[i],p2, test[i - 1]))
-                    {
+                    cout<<"("<<test[i-1][0]<<","<<test[i-1][1]<<")"<<" "<<"("<<test[i][0]<<","<<test[i][1]<<")"<<endl;
+                    bool check = doIntersect(p1, p2, test[i-1], test[i]);
+                    cout<<"check is: "<<check<<endl;
+                    if (check)
+                    {   
                         cout << "intersected!!!" << endl;
                         intersections++;
                     }
