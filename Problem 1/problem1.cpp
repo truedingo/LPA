@@ -16,13 +16,18 @@ int y;
 int source_device;
 int target_device;
 int n_places;
-int ind = 1;
-int intersections = 0;
 vector<vector<int>> coord_vector;
 vector<int> coordinates;
 vector<int> pairs_vector;
+
+//variaveis da funcao n_intersect
 vector<vector<int>> test;
 int first = 0;
+int intersections = 0;
+int ind = 1;
+
+int best_case = 1000;
+
 
 void n_intersect(vector<vector<int>> points, int iterations);
 vector<vector<int>> makeConnections(vector<vector<int>> connVector, vector<vector<int>> permute_vector);
@@ -148,9 +153,10 @@ void n_intersect(vector<vector<int>> points, int iterations)
     if (iterations > 0)
     {
         //starting on 1
-        cout << endl
-             << "Ind: " << ind << endl;
-        cout << "Iterations: " << iterations << endl;
+        cout << endl;
+           //  << "Ind: " << ind << endl;
+        //cout << "Iterations: " << iterations << endl;
+        //cout << "intersections: " << intersections<<endl;
 
         //reta actual
         //ponto 2
@@ -202,8 +208,14 @@ void n_intersect(vector<vector<int>> points, int iterations)
         ind = ind + 2;
         n_intersect(points, iterations);
     }
+    //fechar a funcao
     else
     {
+        cout <<"last iteration - intersections: " <<intersections<<endl;
+        if(best_case>intersections){
+            best_case = intersections;
+        }
+        intersections = 0;
         ind = 1;
         test.clear();
         return;
@@ -259,5 +271,7 @@ int main()
     auto duration = duration_cast<microseconds>(stop - start);
     cout << intersections << endl;
     cout << duration.count() * pow(10, -6) << " seconds" << endl;
+
+    cout << "best case: "<< best_case<<endl;
     return 0;
 }
