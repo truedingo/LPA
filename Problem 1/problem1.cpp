@@ -4,6 +4,7 @@
 #include <array>
 #include <chrono>
 #include <math.h>
+#include <stdio.h>
 //g++ -Wall -std=c++11 problem1.cpp -o problem1
 
 using namespace std;
@@ -16,51 +17,54 @@ int y;
 int source_device;
 int target_device;
 int n_places;
-vector<vector<int>> coord_vector;
+vector<vector<int> > coord_vector;
 vector<int> coordinates;
 vector<int> pairs_vector;
 
 //variaveis da funcao n_intersect
-vector<vector<int>> test;
+vector<vector<int> > test;
 int first = 0;
 int intersections = 0;
 int ind = 1;
 
-int best_case = 1000;
+int best_case = 999999;
 
 
-void n_intersect(vector<vector<int>> points, int iterations);
-vector<vector<int>> makeConnections(vector<vector<int>> connVector, vector<vector<int>> permute_vector);
-void printConnectionVector(vector<vector<int>> connVector);
+void n_intersect(vector<vector<int> > points, int iterations);
+vector<vector<int> > makeConnections(vector<vector<int> > connVector, vector<vector<int> > permute_vector);
+void printConnectionVector(vector<vector<int> > connVector);
 
 //permute uses vector size and number of devices
-void permute(vector<vector<int>> v, int n_places, int n_devices)
+void permute(vector<vector<int> > v, int n_places, int n_devices)
 {
-
-    vector<vector<int>> connection_vector(pairs_vector.size(), vector<int>(2, 0));
-    if (n_devices == 0)
-    {
-        vector<vector<int>> permut;
-        for (int i = n_places; i < coord_vector.size(); i++)
-        {
-            permut.push_back(v[i]);
-        }
-        /*for(int m=0; m<permut.size(); m++){
-            cout<<"("<<permut[m][0]<<" "<<permut[m][1]<<")  ";
-        }*/
-
-        connection_vector = makeConnections(connection_vector, permut);
-        intersections = 0;
-        printConnectionVector(connection_vector);
-        n_intersect(connection_vector, connection_vector.size() / 2);
-        cout << intersections << endl;
-        cout << endl;
+    if(best_case == 0){
+        return;
     }
-    for (int j = 0; j < n_places; j++)
-    {
-        swap(coord_vector[j], coord_vector[n_places - 1]);
-        permute(coord_vector, n_places - 1, n_devices - 1);
-        swap(v[j], v[n_places - 1]); //backtrack
+    else{
+        vector<vector<int> > connection_vector((int)pairs_vector.size(), vector<int>(2, 0));
+        if (n_devices == 0)
+        {
+            vector<vector<int> > permut;
+            for (int i = n_places; i < (int)coord_vector.size(); i++)
+            {
+                permut.push_back(v[i]);
+            }
+            /*for(int m=0; m<permut.size(); m++){
+                cout<<"("<<permut[m][0]<<" "<<permut[m][1]<<")  ";
+            }*/
+
+            connection_vector = makeConnections(connection_vector, permut);
+            intersections = 0;
+            //printConnectionVector(connection_vector);
+            n_intersect(connection_vector, (int)connection_vector.size() / 2);
+            //cout << endl;
+        }
+        for (int j = 0; j < n_places; j++)
+        {
+            swap(coord_vector[j], coord_vector[n_places - 1]);
+            permute(coord_vector, n_places - 1, n_devices - 1);
+            swap(coord_vector[j], coord_vector[n_places - 1]); //backtrack
+        }
     }
 }
 
@@ -106,79 +110,79 @@ bool doIntersect(vector<int> p1, vector<int> q1, vector<int> p2, vector<int> q2)
 
     // Caso de colinearidade entre target points do professor
     if(p1 == p2 or p1 == q2 or q1 == p2 or q1 == q2){
-        cout<<"ENTREI AQUI!"<<endl;
+        //cout<<"ENTREI AQUI!"<<endl;
         return false;
     }
     // General case
     if (o1 != o2 && o3 != o4){
-        cout<<"BASE CASE 1"<<endl;
+        /*cout<<"BASE CASE 1"<<endl;
         cout<<"("<<p1[0]<<","<<p1[1]<<")"<<" "<<"("<<q1[0]<<","<<q1[1]<<")"<<endl;
-        cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;
+        cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;*/
         return true;
     }
 
     // Special Cases
     // p1, q1 and p2 are colinear and p2 lies on segment p1q1
     if (o1 == 0 && onSegment(p1, p2, q1)){
-        cout<<"BASE CASE 1"<<endl;
+        /*cout<<"BASE CASE 1"<<endl;
         cout<<"("<<p1[0]<<","<<p1[1]<<")"<<" "<<"("<<q1[0]<<","<<q1[1]<<")"<<endl;
-        cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;
+        cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;*/
         return false;
     }
 
     // p1, q1 and q2 are colinear and q2 lies on segment p1q1
     if (o2 == 0 && onSegment(p1, q2, q1)){
-        cout<<"BASE CASE 2"<<endl;
+        /*cout<<"BASE CASE 2"<<endl;
         cout<<"("<<p1[0]<<","<<p1[1]<<")"<<" "<<"("<<q1[0]<<","<<q1[1]<<")"<<endl;
-        cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;
+        cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;*/
         return false;
     }
 
     // p2, q2 and p1 are colinear and p1 lies on segment p2q2
     if (o3 == 0 && onSegment(p2, p1, q2)){
-        cout<<"BASE CASE 3"<<endl;
+        /*cout<<"BASE CASE 3"<<endl;
         cout<<"("<<p1[0]<<","<<p1[1]<<")"<<" "<<"("<<q1[0]<<","<<q1[1]<<")"<<endl;
-        cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;
+        cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;*/
         return false;
     }
 
     // p2, q2 and q1 are colinear and q1 lies on segment p2q2
     if (o4 == 0 && onSegment(p2, q1, q2)){
-        cout<<"BASE CASE 4"<<endl;
+        /*cout<<"BASE CASE 4"<<endl;
         cout<<"("<<p1[0]<<","<<p1[1]<<")"<<" "<<"("<<q1[0]<<","<<q1[1]<<")"<<endl;
-        cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;
+        cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;*/
         return false;
     }
 
     return false; // Doesn't fall in any of the above cases
 }
 
-vector<vector<int>> makeConnections(vector<vector<int>> connVector, vector<vector<int>> permute_vector)
+vector<vector<int> > makeConnections(vector<vector<int> > connVector, vector<vector<int> > permute_vector)
 {
-    for (int i = 0; i < connVector.size(); i++)
+    for (int i = 0; i < (int)connVector.size(); i++)
     {
         connVector[i] = permute_vector[pairs_vector[i] - 1];
     }
     return connVector;
 }
 
-void printConnectionVector(vector<vector<int>> connVector)
+void printConnectionVector(vector<vector<int> > connVector)
 {
-    for (int i = 0; i < connVector.size(); i++)
+    for (int i = 0; i < (int)connVector.size(); i++)
     {
         cout << "(" << connVector[i][0] << "," << connVector[i][1] << ")"
              << " ";
     }
 }
 
-void n_intersect(vector<vector<int>> points, int iterations)
+void n_intersect(vector<vector<int> > points, int iterations)
 {
 
     //iteracoes e o numero de vezes que esta funcao tem de executar. da return quando chega a 0
     if (iterations > 0)
     {
         //starting on 1
-        cout << endl;
+        //cout << endl;
            //  << "Ind: " << ind << endl;
         //cout << "Iterations: " << iterations << endl;
         //cout << "intersections: " << intersections<<endl;
@@ -188,32 +192,30 @@ void n_intersect(vector<vector<int>> points, int iterations)
         vector<int> p1;
         p1.push_back(points[ind-1][0]);
         p1.push_back(points[ind-1][1]);
-        cout << "P1- x: " << p1[0] << " y: " << p1[1] << endl;
+        //cout << "P1- x: " << p1[0] << " y: " << p1[1] << endl;
 
         //ponto1
         vector<int> p2;
         p2.push_back(points[ind][0]);
         p2.push_back(points[ind][1]);
-        cout << "P2 - x: " << p2[0] << " y: " << p2[1] << endl;
+        //cout << "P2 - x: " << p2[0] << " y: " << p2[1] << endl;
 
         int i;
         //se esta na primeira iteracao
         if (first != 0)
         {
-            for (i = 0; i < test.size(); i++)
+            for (i = 0; i < (int)test.size(); i++)
             {
 
                 // aqui so queremos os indices impares para se poder sempre ir buscar o anterior
                 if (i % 2 != 0)
-                {   cout<<"p1: ("<<p1[0]<<","<<p1[1]<<")"<<endl;
+                {   /*cout<<"p1: ("<<p1[0]<<","<<p1[1]<<")"<<endl;
                     cout<<"p2: ("<<p2[0]<<","<<p2[1]<<")"<<endl;
                     cout << "intersected with"<<endl;
-                    cout<<"("<<test[i-1][0]<<","<<test[i-1][1]<<")"<<" "<<"("<<test[i][0]<<","<<test[i][1]<<")"<<endl;
-                    bool check = doIntersect(p1, p2, test[i-1], test[i]);
-                    cout<<"check is: "<<check<<endl;
-                    if (check)
+                    cout<<"("<<test[i-1][0]<<","<<test[i-1][1]<<")"<<" "<<"("<<test[i][0]<<","<<test[i][1]<<")"<<endl;*/
+                    if (doIntersect(p1, p2, test[i-1], test[i]))
                     {   
-                        cout << "intersected!!!" << endl;
+                        /*cout << "intersected!!!" << endl;*/
                         intersections++;
                     }
                 }
@@ -235,7 +237,7 @@ void n_intersect(vector<vector<int>> points, int iterations)
     //fechar a funcao
     else
     {
-        cout <<"last iteration - intersections: " <<intersections<<endl;
+        //cout <<"last iteration - intersections: " <<intersections<<endl;
         if(best_case>intersections){
             best_case = intersections;
         }
@@ -260,15 +262,15 @@ int main()
         coordinates.clear();
     }
 
-    cout << "Coordinates vector: " << endl;
-    cout << " " << endl;
-    for (i = 0; i < coord_vector.size(); i++)
+    //cout << "Coordinates vector: " << endl;
+    //cout << " " << endl;
+    /*for (i = 0; i < coord_vector.size(); i++)
     {
         cout << "x: " << coord_vector[i][0] << " y: " << coord_vector[i][1] << endl;
-    }
+    }*/
 
-    cout << " " << endl;
-    cout << "End of Coordinates vector" << endl;
+    //cout << " " << endl;
+    //cout << "End of Coordinates vector" << endl;
 
     cin >> n_devices >> n_colliders;
 
@@ -278,24 +280,25 @@ int main()
         pairs_vector.push_back(source_device);
         pairs_vector.push_back(target_device);
     }
-    cout << "Pairs of Source and Targets: " << endl;
-    cout << " " << endl;
+    /*cout << "Pairs of Source and Targets: " << endl;
+    cout << " " << endl;*
 
     for (i = 0; i < pairs_vector.size(); i++)
     {
         cout << "Source: " << pairs_vector[i] << " Target: " << pairs_vector[i] << endl;
     }
     cout << "End of Pairs of Source and Targets" << endl;
-    cout << " " << endl;
+    cout << " " << endl;*/
 
-    auto start = high_resolution_clock::now();
+    //auto start = high_resolution_clock::now();
 
     permute(coord_vector, coord_vector.size(), n_devices);
-    auto stop = high_resolution_clock::now();
-    auto duration = duration_cast<microseconds>(stop - start);
-    cout << intersections << endl;
-    cout << duration.count() * pow(10, -6) << " seconds" << endl;
+    cout<<best_case<<endl;
+    //auto stop = high_resolution_clock::now();
+    //auto duration = duration_cast<microseconds>(stop - start);
+    //cout << intersections << endl;
+    //cout << duration.count() * pow(10, -6) << " seconds" << endl;
 
-    cout << "best case: "<< best_case<<endl;
+    //cout << "best case: "<< best_case<<endl;
     return 0;
 }
