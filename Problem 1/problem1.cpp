@@ -22,9 +22,15 @@ vector<vector<int> > coord_vector;
 vector<int> coordinates;
 vector<int>pairs_vector;
 
+void n_intersect(vector<vector<int> > points,int iterations);
+vector<vector<int> > makeConnections(vector<vector<int> >connVector, vector<vector<int>>permute_vector);
+void printConnectionVector(vector<vector<int> >connVector);
+
+
 //permute uses vector size and number of devices
-void permute(vector<vector<int> > v, int n_places, int n_devices)
-{
+void permute(vector<vector<int> > v, int n_places, int n_devices){
+
+    vector<vector<int> >connection_vector(pairs_vector.size(), vector<int>(2,0));
    if (n_devices == 0) {
        vector<vector<int> >permut;
         for (int i=n_places; i< coord_vector.size(); i++) {
@@ -32,9 +38,15 @@ void permute(vector<vector<int> > v, int n_places, int n_devices)
            
             
         }
-        for(int m=0; m<permut.size(); m++){
-            cout<<permut[m][0]<<" "<<permut[m][1]<<" ";
-        }
+        /*for(int m=0; m<permut.size(); m++){
+            cout<<"("<<permut[m][0]<<" "<<permut[m][1]<<")  ";
+        }*/
+
+        connection_vector = makeConnections(connection_vector, permut);
+        intersections=0;
+        printConnectionVector(connection_vector);
+        n_intersect(connection_vector,connection_vector.size()/4);
+        cout<<intersections<<endl;
         cout<<endl;
     }
     for (int j=0; j< n_places; j++)
@@ -104,9 +116,9 @@ bool doIntersect(vector<int > p1, vector<int > q1, vector<int > p2, vector<int >
 	return false; // Doesn't fall in any of the above cases 
 }
 
-vector<vector<int> > makeConnections(vector<vector<int> >connVector){
+vector<vector<int> > makeConnections(vector<vector<int> >connVector, vector<vector<int>>permute_vector){
 	for(int i=0; i<connVector.size(); i++){
-        connVector[i] = coord_vector[pairs_vector[i]-1];
+        connVector[i] = permute_vector[pairs_vector[i]-1];
     }
     return connVector;
 }
@@ -117,6 +129,7 @@ void printConnectionVector(vector<vector<int> >connVector){
     }
 }
 
+
 void n_intersect(vector<vector<int> > points,int iterations){
  
     //iteractions = 2 temporario
@@ -126,24 +139,24 @@ void n_intersect(vector<vector<int> > points,int iterations){
         cout<<"Iterations: "<<iterations<<endl;
         //reta 2
         vector<int> p1;
-        p1[0] = points[ind][0];
-        p1[1] = points[ind][1];
+        p1.push_back(points[ind][0]);
+        p1.push_back(points[ind][1]);
         cout<<"P1- x: "<<p1[0]<<" y: "<< p1[1]<<endl;
        
         vector<int> p2;
-        p2[0] = points[ind-1][0];
-        p2[1] = points[ind-1][1];
+        p2.push_back(points[ind-1][0]);
+        p2.push_back(points[ind-1][1]);
         cout<<"P2 - x: "<< p2[0]<<" y: "<<p2[1]<<endl;
  
         //reta 1
         vector<int> p3;
-        p3[0] = points[ind-2][0];
-        p3[1] = points[ind-2][1];
+        p3.push_back(points[ind-2][0]);
+        p3.push_back(points[ind-2][1]);
         cout<<"P3 - x: "<<p3[0]<<" y: "<<p3[1]<<endl;
    
         vector<int> p4;
-        p4[0] = points[ind-3][0];
-        p4[1] = points[ind-3][1];
+        p4.push_back(points[ind-3][0]);
+         p4.push_back(points[ind-3][1]); 
         cout<<"P4- x: "<<p4[0]<<" y: "<<p4[1]<<endl;
  
         if(doIntersect(p1,p2,p3,p4)){
@@ -155,6 +168,7 @@ void n_intersect(vector<vector<int> > points,int iterations){
         n_intersect(points,iterations);
     }
     else{
+        ind=3;
         return;
     }
 }
@@ -202,13 +216,9 @@ int main(){
     auto start = high_resolution_clock::now();
 
     permute(coord_vector, coord_vector.size(), n_devices);
-
-    vector<vector<int> >connection_vector(pairs_vector.size(), vector<int>(2,0));
-    connection_vector = makeConnections(connection_vector);
-	printConnectionVector(connection_vector);
-
     auto stop = high_resolution_clock::now(); 
     auto duration = duration_cast<microseconds>(stop - start); 
+    cout<<intersections<<endl;
     cout << duration.count() * pow(10,-6)<<" seconds"<< endl; 
     return 0;
 }
