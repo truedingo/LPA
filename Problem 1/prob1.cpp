@@ -140,9 +140,9 @@ bool doIntersect(Point p1, Point q1, Point p2, Point q2)
     return false; // Doesn't fall in any of the above cases
 }
 
-void recursive()
+void recursive(int device)
 {
-    if (count_intersections >= min_intersections && n_devices <= n_devices)
+    if (count_intersections >= min_intersections && device <= n_devices)
         return;
 }
 
@@ -183,7 +183,7 @@ int main()
         {
             places_used[i] = true;
             d_place[j] = i;
-            recursive();
+            recursive(j);
             d_place[j] = 0;
             places_used[i] = false;
         }
