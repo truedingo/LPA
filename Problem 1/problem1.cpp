@@ -1,14 +1,12 @@
 #include <iostream>
-#include <string>
-#include <vector>
-#include <array>
-#include <chrono>
-#include <math.h>
 #include <stdio.h>
+#include <vector>
+#include <math.h>
+
 //g++ -Wall -std=c++11 problem1.cpp -o problem1
 
 using namespace std;
-using namespace std::chrono;
+
 int n_devices;
 int n_colliders;
 int i;
@@ -166,6 +164,7 @@ vector<vector<int> > makeConnections(vector<vector<int> > connVector, vector<vec
     return connVector;
 }
 
+/*
 void printConnectionVector(vector<vector<int> > connVector)
 {
     for (int i = 0; i < (int)connVector.size(); i++)
@@ -174,7 +173,7 @@ void printConnectionVector(vector<vector<int> > connVector)
              << " ";
     }
 }
-
+*/
 void n_intersect(vector<vector<int> > points, int iterations)
 {
 
@@ -292,7 +291,7 @@ int main()
 
     //auto start = high_resolution_clock::now();
 
-    permute(coord_vector, coord_vector.size(), n_devices);
+    permute(coord_vector, (int)coord_vector.size(), n_devices);
     cout<<best_case<<endl;
     //auto stop = high_resolution_clock::now();
     //auto duration = duration_cast<microseconds>(stop - start);
