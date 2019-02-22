@@ -11,7 +11,8 @@ X: 4 Y: 4
 X: 5 Y: 4
  
 End of Coordinates vector
-Pairs of Source and Targets: 
+
+Colliders of Source and Targets: 
  
 Source: 1   -->   Target: 2
 Source: 1   -->   Target: 3
@@ -23,5 +24,6 @@ Source: 2   -->   Target: 5
 Source: 3   -->   Target: 4
 Source: 3   -->   Target: 5
 Source: 4   -->   Target: 5
-End of Pairs of Source and Targets
+
+End of Colliders of Source and Targets
  

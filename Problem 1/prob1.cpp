@@ -21,23 +21,53 @@ typedef struct line
     Point target;
 } Line;
 
-typedef struct pairs
+typedef struct colliders
 {
     int source;
     int target;
-} Pairs;
+} Colliders;
 
 int n_places;
 int n_devices;
 int n_colliders;
 Point coordinates[MAX_COORDINATES];
-Pairs pairs[MAX_COLLIDERS];
+Colliders colliders[MAX_COLLIDERS];
+
 int devices[MAX_DEVICES];
 bool places_used[MAX_COORDINATES];
 int d_place[MAX_COORDINATES];
 int count_intersections;
 int min_intersections;
 
+void printCoordinates()
+{
+    int i;
+    cout << "Coordinates vector: " << endl;
+    cout << " " << endl;
+
+    for (i = 0; i < n_places; i++)
+    {
+        cout << "X: " << coordinates[i].x << " Y: " << coordinates[i].y << endl;
+    }
+
+    cout << " " << endl;
+    cout << "End of Coordinates vector" << endl;
+    cout << endl;
+}
+
+void printColliders()
+{
+    cout << "Colliders of Source and Targets: " << endl;
+    cout << " " << endl;
+    int i;
+    for (i = 0; i < n_colliders; i++)
+    {
+        cout << "Source: " << colliders[i].source << "   -->   Target: " << colliders[i].target << endl;
+    }
+    cout << endl;
+    cout << "End of Colliders of Source and Targets" << endl;
+    cout << " " << endl;
+}
 // Given three colinear points p, q, r, the function checks if
 // point q lies on line segment 'pr'
 bool onSegment(Point p, Point q, Point r)
@@ -84,6 +114,13 @@ bool doIntersect(Point p1, Point q1, Point p2, Point q2)
 
     // Special Cases
 
+    // Caso de colinearidade entre target points do professor
+    if ((p1.x == p2.x and p1.y == p2.y) or (p1.x == q2.x and p1.y == q2.y) or (q1.x == p2.x and q1.y == p2.y) or (q1.x == q2.x and q1.y == q2.y))
+    {
+        //cout<<"ENTREI AQUI!"<<endl;
+        return false;
+    }
+
     // p1, q1 and p2 are colinear and p2 lies on segment p1q1
     if (o1 == 0 && onSegment(p1, p2, q1))
         return true;
@@ -121,16 +158,7 @@ int main()
         coordinates[i] = p;
     }
 
-    cout << "Coordinates vector: " << endl;
-    cout << " " << endl;
-
-    for (i = 0; i < n_places; i++)
-    {
-        cout << "X: " << coordinates[i].x << " Y: " << coordinates[i].y << endl;
-    }
-
-    cout << " " << endl;
-    cout << "End of Coordinates vector" << endl;
+    printCoordinates();
 
     cin >> n_devices >> n_colliders;
 
@@ -141,19 +169,12 @@ int main()
 
     for (i = 0; i < n_colliders; i++)
     {
-        Pairs pair;
+        Colliders pair;
         cin >> pair.source >> pair.target;
-        pairs[i] = pair;
+        colliders[i] = pair;
     }
-    cout << "Pairs of Source and Targets: " << endl;
-    cout << " " << endl;
 
-    for (i = 0; i < n_colliders; i++)
-    {
-        cout << "Source: " << pairs[i].source << "   -->   Target: " << pairs[i].target << endl;
-    }
-    cout << "End of Pairs of Source and Targets" << endl;
-    cout << " " << endl;
+    printColliders();
 
     for (i = 0; i < n_places; i++)
     {
