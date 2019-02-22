@@ -6,6 +6,7 @@
 //g++ -Wall -std=c++11 problem1.cpp -o problem1
 
 using namespace std;
+//using namespace std::chrono;
 
 int n_devices;
 int n_colliders;

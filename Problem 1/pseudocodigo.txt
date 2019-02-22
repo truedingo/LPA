@@ -1,0 +1,26 @@
+Dmax -> grau máximo
+D(i,j)-> custo de ligar i a j
+
+Function Tree(V, cost):
+    if v= n+1
+        if best>cost 
+            best=cost
+        return
+    if cost >= best 
+        return
+
+    
+    
+    
+ Function Main():   
+    for i to n:
+        if visit[i]==True and deg[i]<Dmax:
+            for j = 1 to n:
+                if visit[j]=False:
+                    visit[j]=True
+                    deg[j] ++
+                    deg[i] ++
+                    Tree(v+1,cost+D(i,j))
+                    visit[j]=False
+                    deg[j] --
+                    deg[i] --
