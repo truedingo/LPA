@@ -123,34 +123,34 @@ bool doIntersect(vector<int> p1, vector<int> q1, vector<int> p2, vector<int> q2)
     // Special Cases
     // p1, q1 and p2 are colinear and p2 lies on segment p1q1
     if (o1 == 0 && onSegment(p1, p2, q1)){
-        /*cout<<"BASE CASE 1"<<endl;
+        /*cout<<"BASE CASE 2"<<endl;
         cout<<"("<<p1[0]<<","<<p1[1]<<")"<<" "<<"("<<q1[0]<<","<<q1[1]<<")"<<endl;
         cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;*/
-        return false;
+        return true;
     }
 
     // p1, q1 and q2 are colinear and q2 lies on segment p1q1
     if (o2 == 0 && onSegment(p1, q2, q1)){
-        /*cout<<"BASE CASE 2"<<endl;
+        /*cout<<"BASE CASE 3"<<endl;
         cout<<"("<<p1[0]<<","<<p1[1]<<")"<<" "<<"("<<q1[0]<<","<<q1[1]<<")"<<endl;
         cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;*/
-        return false;
+        return true;
     }
 
     // p2, q2 and p1 are colinear and p1 lies on segment p2q2
     if (o3 == 0 && onSegment(p2, p1, q2)){
-        /*cout<<"BASE CASE 3"<<endl;
+        /*cout<<"BASE CASE 4"<<endl;
         cout<<"("<<p1[0]<<","<<p1[1]<<")"<<" "<<"("<<q1[0]<<","<<q1[1]<<")"<<endl;
         cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;*/
-        return false;
+        return true;
     }
 
     // p2, q2 and q1 are colinear and q1 lies on segment p2q2
     if (o4 == 0 && onSegment(p2, q1, q2)){
-        /*cout<<"BASE CASE 4"<<endl;
+        /*cout<<"BASE CASE 5"<<endl;
         cout<<"("<<p1[0]<<","<<p1[1]<<")"<<" "<<"("<<q1[0]<<","<<q1[1]<<")"<<endl;
         cout<<"("<<p2[0]<<","<<p2[1]<<")"<<" "<<"("<<q2[0]<<","<<q2[1]<<")"<<endl;*/
-        return false;
+        return true;
     }
 
     return false; // Doesn't fall in any of the above cases
