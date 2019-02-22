@@ -27,9 +27,11 @@ recursive::
                 take adjacency point of p
                 delete new line
 
+
 main::
+
     for p in places:
         for d in places:
             put d in p
             ::recursive
-            
+            take d of p
