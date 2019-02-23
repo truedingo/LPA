@@ -23,7 +23,7 @@ vector<int> pairs_vector;
 //variaveis da funcao n_intersect
 vector<vector<int> > test;
 int first = 0;
-int intersections = 0;
+int intersect = 0;
 int ind = 1;
 
 int best_case = 999999;
@@ -53,7 +53,7 @@ void permute(vector<vector<int> > v, int n_places, int n_devices)
             }*/
 
             connection_vector = makeConnections(connection_vector, permut);
-            intersections = 0;
+            intersect = 0;
             //printConnectionVector(connection_vector);
             n_intersect(connection_vector, (int)connection_vector.size() / 2);
             //cout << endl;
@@ -185,7 +185,7 @@ void n_intersect(vector<vector<int> > points, int iterations)
         //cout << endl;
            //  << "Ind: " << ind << endl;
         //cout << "Iterations: " << iterations << endl;
-        //cout << "intersections: " << intersections<<endl;
+        //cout << "intersect: " << intersect<<endl;
 
         //reta actual
         //ponto 2
@@ -216,7 +216,7 @@ void n_intersect(vector<vector<int> > points, int iterations)
                     if (doIntersect(p1, p2, test[i-1], test[i]))
                     {   
                         /*cout << "intersected!!!" << endl;*/
-                        intersections++;
+                        intersect++;
                     }
                 }
             }
@@ -237,11 +237,11 @@ void n_intersect(vector<vector<int> > points, int iterations)
     //fechar a funcao
     else
     {
-        //cout <<"last iteration - intersections: " <<intersections<<endl;
-        if(best_case>intersections){
-            best_case = intersections;
+        //cout <<"last iteration - intersect: " <<intersect<<endl;
+        if(best_case>intersect){
+            best_case = intersect;
         }
-        intersections = 0;
+        intersect = 0;
         ind = 1;
         test.clear();
         return;
@@ -296,7 +296,7 @@ int main()
     cout<<best_case<<endl;
     //auto stop = high_resolution_clock::now();
     //auto duration = duration_cast<microseconds>(stop - start);
-    //cout << intersections << endl;
+    //cout << intersect << endl;
     //cout << duration.count() * pow(10, -6) << " seconds" << endl;
 
     //cout << "best case: "<< best_case<<endl;

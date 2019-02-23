@@ -39,6 +39,8 @@ int d_place[MAX_COORDINATES];
 int count_intersections;
 int min_intersections;
 
+bool finished = false; /* found all solutions yet? */
+
 void printCoordinates()
 {
     int i;
@@ -140,11 +142,23 @@ bool doIntersect(Point p1, Point q1, Point p2, Point q2)
     return false; // Doesn't fall in any of the above cases
 }
 
+int countIntersections(Line line, vector<Line> lines)
+{
+    int count = 0;
+    for (int i = 0; i < (int)lines.size(); i++)
+    {
+        if (doIntersect(line.source, line.target, lines[i].source, lines[i].target))
+            count++;
+    }
+    return count;
+}
+
 void recursive(int device)
 {
     if (count_intersections >= min_intersections && device <= n_devices)
         return;
 }
+
 
 int main()
 {
@@ -175,7 +189,7 @@ int main()
     }
 
     printColliders();
-
+    /*
     for (i = 0; i < n_places; i++)
     {
 
@@ -187,7 +201,9 @@ int main()
             d_place[j] = 0;
             places_used[i] = false;
         }
-    }
+    }*/
+
+   
 
     return 0;
 }
