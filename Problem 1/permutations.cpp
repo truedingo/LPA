@@ -32,7 +32,6 @@ void process_solution(int[], int);
 void construct_candidates(int[], int, int, int[], int *);
 
 bool finished = false;                  /* found all solutions yet? */
-bool check = true;
 
 /* backtrack 
  * starts from a given partial solution vector a[] with k elements
@@ -45,6 +44,7 @@ void backtrack(int a[], int k, data input)
         int c[MAXCANDIDATES];           /* candidates for next position */
         int ncandidates;                /* next position candidate count */
         int i;                          /* counter */
+<<<<<<< HEAD
 
         if (is_a_solution(a,k,input))
                 process_solution(a,k);
@@ -57,6 +57,16 @@ void backtrack(int a[], int k, data input)
 					if (finished) return;	/* terminate early */
                 }
         }
+=======
+			process_solution(a,k);
+			k = k+1;
+			construct_candidates(a,k,input,c,&ncandidates);
+			for (i=0; i<ncandidates; i++) {
+				a[k] = c[i];
+				backtrack(a,k,input);
+				if (finished) return;	/* terminate early */
+			}
+>>>>>>> cdfed23df6f0b06ee1999509f94a89e346d33c97
 }
 
 
@@ -98,7 +108,9 @@ void construct_candidates(int a[], int k, int n, int c[], int *ncandidates)
 	bool in_perm[NMAX];		/* what is now in the permutation? */
 
 	for (i=1; i<NMAX; i++) in_perm[i] = false;
-	for (i=1; i<k; i++) in_perm[ a[i] ] = true;
+
+	for (i=1; i<=k; i++) in_perm[ a[i] ] = true;
+
 
 	*ncandidates = 0;
 	for (i=1; i<=n; i++) 
