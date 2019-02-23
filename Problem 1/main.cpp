@@ -33,7 +33,7 @@ int d_place[MAX_COORDINATES];
 
 vector<Line> lines;
 
-int best_case=1;
+int best_case = 1;
 
 void printCoordinates()
 {
@@ -139,36 +139,40 @@ void recursive(int device)
     int count_intersections = 0;
     cout << "I'm on device " << device << endl;
 
-    if (count_intersections >= best_case and device <= n_devices){
+    if (count_intersections >= best_case and device <= n_devices)
+    {
         return;
     }
     if (adjacencies[device] == 0)
     {
         device = device + 1;
         if (d_place[device] != 0)
-            recursive(device);
+            recursive(device+1);
         else
             for (int i = 0; i < n_places; i++)
             {
                 if (places_used[i] == false)
                 {
+                    places_used[i] = true;
                     d_place[device] = i;
                     recursive(device);
                     d_place[device] = 0;
+                    places_used[i] = false;
                 }
             }
     }
     else
     {
         if (adjacencies[device] != 0)
-        {   
+        {
             Line new_line;
             new_line.source = coordinates[d_place[device]];
             new_line.target = coordinates[adjacencies[device]];
+            cout << "New line Source: (" << new_line.source.x << " , " << new_line.source.y << ")   --->     Target: (" << new_line.target.x << " , " << new_line.target.y << ")" << endl;
             count_intersections = countIntersections(new_line, lines);
-            cout<<count_intersections<<endl;
+            cout << count_intersections << endl;
             lines.push_back(new_line);
-            recursive(device);
+            recursive(device+1);
             lines.pop_back();
         }
         else
@@ -177,15 +181,19 @@ void recursive(int device)
             {
                 if (places_used[i] == false)
                 {
+                     places_used[i] = true;
                     Line new_line;
                     new_line.source = coordinates[d_place[device]];
                     new_line.target = coordinates[adjacencies[device]];
+                    cout << "New line Source: (" << new_line.source.x << " , " << new_line.source.y << ")   --->     Target: (" << new_line.target.x << " , " << new_line.target.y << ")" << endl;
                     count_intersections = countIntersections(new_line, lines);
                     d_place[adjacencies[device]] = i;
+                   
                     lines.push_back(new_line);
                     recursive(device);
                     d_place[adjacencies[device]] = 0;
                     lines.pop_back();
+                    places_used[i] = false;
                 }
             }
         }
@@ -224,19 +232,20 @@ int main()
 
     for (i = 1; i <= n_places; i++)
     {
-        for (int j = 1; j <= n_devices; j++)
-        {
-            //ponto esta a ser usado neste instante
-            places_used[i] = true;
-            ///cout<<"place "<<i<< " used!!"<<endl;
-            d_place[j] = i;
-            //cout<<"device number  "<<j<< " associated with place "<<i<<endl;
+        if (places_used[i] == false)
+            for (int j = 1; j <= n_devices; j++)
+            {
+                //ponto esta a ser usado neste instante
+                places_used[i] = true;
+                ///cout<<"place "<<i<< " used!!"<<endl;
+                d_place[j] = i;
+                //cout<<"device number  "<<j<< " associated with place "<<i<<endl;
 
-            //cout<<"doing recursive..."<<endl;
-            recursive(j);
-            d_place[j] = 0;
-            places_used[i] = false;
-        }
+                //cout<<"doing recursive..."<<endl;
+                recursive(j + 1);
+                d_place[j] = 0;
+                places_used[i] = false;
+            }
     }
 
     return 0;
