@@ -46,7 +46,7 @@ void backtrack(int a[], int k, data input)
         int ncandidates;                /* next position candidate count */
         int i;                          /* counter */
 
-        if (check)
+        if (is_a_solution(a,k,input))
                 process_solution(a,k);
         else {
                 k = k+1;
@@ -124,5 +124,5 @@ int main() {
 		output.push_back(base[i]);  // initialize output vector
 
 	// show all permutations of the first N characters for several values of N
-	backtrack(a,0,2);
+	backtrack(a,0,4);
 }

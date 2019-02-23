@@ -157,6 +157,25 @@ void recursive(int device)
 {
     if (count_intersections >= min_intersections && device <= n_devices)
         return;
+    
+    else{
+        if(d_place[device]!=0){
+            //add new line
+            //comparisons
+            recursive(device);
+            //take line
+        }else{
+            for(int i=0;i < n_places;i++){
+                if(places_used[i]==false){
+                    //add new line
+                    places_used[i]= true;
+                    //comparisons
+                    d_place[device]=i;
+                    //take new line
+                }
+            }
+        }
+    }
 }
 
 
@@ -189,19 +208,23 @@ int main()
     }
 
     printColliders();
-    /*
+    
     for (i = 0; i < n_places; i++)
     {
 
         for (int j = 0; j < n_devices; j++)
         {
+            cout<<"i: "<<i<<" ----> j: "<< j<<endl;
             places_used[i] = true;
             d_place[j] = i;
             recursive(j);
             d_place[j] = 0;
             places_used[i] = false;
+            
         }
-    }*/
+    }
+
+    
 
    
 
