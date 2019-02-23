@@ -13,6 +13,7 @@ typedef struct point
 {
     int x;
     int y;
+    int id;
 } Point;
 
 typedef struct line
@@ -21,25 +22,16 @@ typedef struct line
     Point target;
 } Line;
 
-typedef struct colliders
-{
-    int source;
-    int target;
-} Colliders;
 
 int n_places;
 int n_devices;
 int n_colliders;
 Point coordinates[MAX_COORDINATES];
-Colliders colliders[MAX_COLLIDERS];
 
-int devices[MAX_DEVICES];
+vector<int> adjacencies[MAX_DEVICES];
 bool places_used[MAX_COORDINATES];
 int d_place[MAX_COORDINATES];
-int count_intersections;
-int min_intersections;
-
-bool finished = false; /* found all solutions yet? */
+int best_case;
 
 void printCoordinates()
 {
@@ -57,19 +49,7 @@ void printCoordinates()
     cout << endl;
 }
 
-void printColliders()
-{
-    cout << "Colliders of Source and Targets: " << endl;
-    cout << " " << endl;
-    int i;
-    for (i = 0; i < n_colliders; i++)
-    {
-        cout << "Source: " << colliders[i].source << "   -->   Target: " << colliders[i].target << endl;
-    }
-    cout << endl;
-    cout << "End of Colliders of Source and Targets" << endl;
-    cout << " " << endl;
-}
+
 // Given three colinear points p, q, r, the function checks if
 // point q lies on line segment 'pr'
 bool onSegment(Point p, Point q, Point r)
@@ -142,41 +122,16 @@ bool doIntersect(Point p1, Point q1, Point p2, Point q2)
     return false; // Doesn't fall in any of the above cases
 }
 
-int countIntersections(Line line, vector<Line> lines)
-{
-    int count = 0;
-    for (int i = 0; i < (int)lines.size(); i++)
-    {
-        if (doIntersect(line.source, line.target, lines[i].source, lines[i].target))
-            count++;
-    }
-    return count;
-}
+
+
 
 void recursive(int device)
 {
-    if (count_intersections >= min_intersections && device <= n_devices)
-        return;
-    
-    else{
-        if(d_place[device]!=0){
-            //add new line
-            //comparisons
-            recursive(device);
-            //take line
-        }else{
-            for(int i=0;i < n_places;i++){
-                if(places_used[i]==false){
-                    //add new line
-                    places_used[i]= true;
-                    //comparisons
-                    d_place[device]=i;
-                    //take new line
-                }
-            }
-        }
-    }
+    int count_intersections = 0;
+    cout << "I'm on device "<< device<<endl;
+
 }
+
 
 
 int main()
@@ -184,49 +139,51 @@ int main()
     int i;
     cin >> n_places;
 
-    for (i = 0; i < n_places; i++)
+    //cout<<"Number of places: "<<n_places<<endl;
+
+
+    for (i = 1; i <= n_places; i++)
     {
         Point p;
         cin >> p.x >> p.y;
         coordinates[i] = p;
     }
 
-    printCoordinates();
+    //printCoordinates();
 
     cin >> n_devices >> n_colliders;
 
-    for (i = 0; i < n_devices; i++)
+    //cout<<"Number of devices: "<<n_devices<<endl;
+    //cout<<"Number of colliders: "<<n_colliders<<endl;
+
+
+    for (i = 1; i <= n_colliders; i++)
     {
-        devices[i] = i + 1;
+        int source, target;
+        cin >> source >> target;
+
+        //coloca no vector de adjacencias os targets(d2) de d1
+        adjacencies[source].push_back(target);
     }
 
-    for (i = 0; i < n_colliders; i++)
+    for (i = 1; i <= n_places; i++)
     {
-        Colliders pair;
-        cin >> pair.source >> pair.target;
-        colliders[i] = pair;
-    }
-
-    printColliders();
-    
-    for (i = 0; i < n_places; i++)
-    {
-
-        for (int j = 0; j < n_devices; j++)
+        for (int j = 1; j <= n_devices; j++)
         {
-            cout<<"i: "<<i<<" ----> j: "<< j<<endl;
+            //ponto esta a ser usado neste instante
             places_used[i] = true;
+            //cout<<"place "<<i<< " used!!"<<endl;
             d_place[j] = i;
+            //cout<<"device number  "<<j<< " associated with place "<<i<<endl;
+
+            //cout<<"doing recursive..."<<endl;
             recursive(j);
             d_place[j] = 0;
             places_used[i] = false;
-            
         }
+
     }
-
     
-
-   
 
     return 0;
 }

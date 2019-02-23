@@ -10,12 +10,17 @@ n_devices=4
 def recursive(device):
     if d_places[device]!=0:
         print(d_places)
-        recursive(device)
+        recursive(device+1)
+        
     else:
         for i in range(len(places)):
             if places_used[i]==False:
                 places_used[i]=True
+                print("Entra aqui")
                 d_places[device]=places[i]
+               
+              
+                
         
 
 
