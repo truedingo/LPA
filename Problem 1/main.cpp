@@ -1,7 +1,5 @@
 #include <iostream>
-#include <string>
 #include <vector>
-#include <array>
 
 #define MAX_COORDINATES 81
 #define MAX_DEVICES 81
@@ -22,18 +20,18 @@ typedef struct line
     Point target;
 } Line;
 
-int n_places;
-int n_devices;
+int n_coordinates;
+int n_devices, n_devices_to_place;
 int n_colliders;
+int best_case;
 
 Point coordinates[MAX_COORDINATES];
-int adjacencies[MAX_DEVICES];
-bool places_used[MAX_COORDINATES];
-int d_place[MAX_COORDINATES];
-
-vector<Line> lines;
-
-int best_case = 1;
+bool coordinates_used[MAX_COORDINATES];
+int device_placed[MAX_COORDINATES];
+bool device_to_use[MAX_DEVICES];
+int intersections[MAX_DEVICES][MAX_DEVICES][MAX_DEVICES][MAX_DEVICES];
+Line lines[MAX_COLLIDERS];
+vector<int> adjacencies[MAX_DEVICES];
 
 void printCoordinates()
 {
@@ -41,7 +39,7 @@ void printCoordinates()
     cout << "Coordinates vector: " << endl;
     cout << " " << endl;
 
-    for (i = 0; i < n_places; i++)
+    for (i = 1; i <= n_coordinates; i++)
     {
         cout << "X: " << coordinates[i].x << " Y: " << coordinates[i].y << endl;
     }
@@ -49,6 +47,22 @@ void printCoordinates()
     cout << " " << endl;
     cout << "End of Coordinates vector" << endl;
     cout << endl;
+}
+
+void print_coordinates_used()
+{
+    for (int i = 1; i <= n_coordinates; i++)
+    {
+        cout << "place " << i + 1 << ": " << coordinates_used[i] << endl;
+    }
+}
+
+void print_device_placed()
+{
+    for (int i = 1; i <= n_coordinates; i++)
+    {
+        cout << "device: " << i + 1 << "on place: " << device_placed[i] << endl;
+    }
 }
 
 // Given three colinear points p, q, r, the function checks if
@@ -80,10 +94,17 @@ int orientation(Point p, Point q, Point r)
     return (val > 0) ? 1 : 2; // clock or counterclock wise
 }
 
-// The main function that returns true if line segment 'p1q1'
-// and 'p2q2' intersect.
-bool doIntersect(Point p1, Point q1, Point p2, Point q2)
+// // The main function that returns true if line segment 'p1q1'
+// // and 'p2q2' intersect.
+int doIntersect(Point p1, Point q1, Point p2, Point q2)
 {
+
+    //Common point
+    if (p1.id == p2.id || p1.id == q2.id || q1.id == p2.id || q1.id == q2.id)
+    {
+        return 0;
+    }
+
     // Find the four orientations needed for general and
     // special cases
     int o1 = orientation(p1, q1, p2);
@@ -93,160 +114,206 @@ bool doIntersect(Point p1, Point q1, Point p2, Point q2)
 
     // General case
     if (o1 != o2 && o3 != o4)
-        return true;
-
-    // Special Cases
-
-    // Caso de colinearidade entre target points do professor
-    if ((p1.x == p2.x and p1.y == p2.y) or (p1.x == q2.x and p1.y == q2.y) or (q1.x == p2.x and q1.y == p2.y) or (q1.x == q2.x and q1.y == q2.y))
     {
-        //cout<<"ENTREI AQUI!"<<endl;
-        return false;
+        return 1;
     }
 
+    // Special Cases
     // p1, q1 and p2 are colinear and p2 lies on segment p1q1
     if (o1 == 0 && onSegment(p1, p2, q1))
-        return true;
+        return 1;
 
     // p1, q1 and q2 are colinear and q2 lies on segment p1q1
     if (o2 == 0 && onSegment(p1, q2, q1))
-        return true;
+        return 1;
 
     // p2, q2 and p1 are colinear and p1 lies on segment p2q2
     if (o3 == 0 && onSegment(p2, p1, q2))
-        return true;
+        return 1;
 
     // p2, q2 and q1 are colinear and q1 lies on segment p2q2
     if (o4 == 0 && onSegment(p2, q1, q2))
-        return true;
+        return 1;
 
-    return false; // Doesn't fall in any of the above cases
+    return 0; // Doesn't fall in any of the above cases
 }
 
-int countIntersections(Line line, vector<Line> lines)
+int countIntersections(Line line, int n_lines)
 {
     int count = 0;
-    for (int i = 0; i < (int)lines.size(); i++)
+    for (int l = 0; l < n_lines; l++)
     {
-        if (doIntersect(line.source, line.target, lines[i].source, lines[i].target))
+        //Without saving
+        //int intersection_type = doIntersect(line.source, line.target, lines[i].source, lines[i].target);
+        //count += intersection_type;
+        //With saving
+        int intersection = intersections[lines[l].source.id][lines[l].target.id][line.source.id][line.target.id];
+        if (intersection == 0)
+        {
+            intersection = doIntersect(line.source, line.target, lines[l].source, lines[l].target);
+            if (intersection == 0)
+            {
+                intersection = 2;
+            }
+            else
+            {
+                intersection = 1;
+                count++;
+            }
+            //Save the intersections
+            intersections[lines[l].source.id][lines[l].target.id][line.source.id][line.target.id] = intersection;
+            intersections[lines[l].source.id][lines[l].target.id][line.target.id][line.source.id] = intersection;
+            intersections[lines[l].target.id][lines[l].source.id][line.source.id][line.target.id] = intersection;
+            intersections[lines[l].target.id][lines[l].source.id][line.target.id][line.source.id] = intersection;
+
+            intersections[line.source.id][line.target.id][lines[l].source.id][lines[l].target.id] = intersection;
+            intersections[line.target.id][line.source.id][lines[l].source.id][lines[l].target.id] = intersection;
+            intersections[line.source.id][line.target.id][lines[l].target.id][lines[l].source.id] = intersection;
+            intersections[line.target.id][line.source.id][lines[l].target.id][lines[l].source.id] = intersection;
+        }
+        else if (intersection == 2)
+        {
+            continue;
+        }
+        else
+        {
             count++;
+        }
     }
     return count;
 }
 
-void recursive(int device)
+void recursive(int device_atual, int num_intersections, int n_lines)
 {
-    int count_intersections = 0;
-    cout << "I'm on device " << device << endl;
 
-    if (count_intersections >= best_case and device <= n_devices)
+    /*    printf("-> %d %d %d\n", device_atual, num_intersections, n_lines);
+    for (int i = 0; i < n_lines; i++){
+        cout << "Line between coordinates " << lines[i].source.id << " and " << lines[i].target.id << endl;
+    }*/
+
+    if (num_intersections >= best_case)
     {
         return;
     }
-    if (adjacencies[device] == 0)
+
+    //If all placed
+    if (device_atual > n_devices)
     {
-        device = device + 1;
-        if (d_place[device] != 0)
-            recursive(device+1);
-        else
-            for (int i = 0; i < n_places; i++)
-            {
-                if (places_used[i] == false)
-                {
-                    places_used[i] = true;
-                    d_place[device] = i;
-                    recursive(device);
-                    d_place[device] = 0;
-                    places_used[i] = false;
-                }
-            }
+        best_case = num_intersections;
+        return;
     }
-    else
+
+    //Search the next device
+    int next_device = device_atual + 1;
+    for (int device = device_atual + 1; device <= n_devices; ++device)
     {
-        if (adjacencies[device] != 0)
+        if (device_to_use[device] == true)
         {
-            Line new_line;
-            new_line.source = coordinates[d_place[device]];
-            new_line.target = coordinates[adjacencies[device]];
-            cout << "New line Source: (" << new_line.source.x << " , " << new_line.source.y << ")   --->     Target: (" << new_line.target.x << " , " << new_line.target.y << ")" << endl;
-            count_intersections = countIntersections(new_line, lines);
-            cout << count_intersections << endl;
-            lines.push_back(new_line);
-            recursive(device+1);
-            lines.pop_back();
+            next_device = device;
+            break;
         }
-        else
+    }
+
+    for (int coordinate = 1; coordinate <= n_coordinates; coordinate++)
+    {
+        if (coordinates_used[coordinate] == false)
         {
-            for (int i = 0; i < n_places; i++)
+            //cout << "Device " << device_atual << " in coordinate " << coordinate << endl;
+            device_placed[device_atual] = coordinate;
+            coordinates_used[coordinate] = true;
+
+            int count_intersections = 0;
+            int n_lines_new = n_lines;
+            for (int adjacent = 0; adjacent < (int)adjacencies[device_atual].size(); adjacent++)
             {
-                if (places_used[i] == false)
+                int adjacent_device = adjacencies[device_atual][adjacent];
+                if (device_placed[adjacent_device] != 0)
                 {
-                     places_used[i] = true;
-                    Line new_line;
-                    new_line.source = coordinates[d_place[device]];
-                    new_line.target = coordinates[adjacencies[device]];
-                    cout << "New line Source: (" << new_line.source.x << " , " << new_line.source.y << ")   --->     Target: (" << new_line.target.x << " , " << new_line.target.y << ")" << endl;
-                    count_intersections = countIntersections(new_line, lines);
-                    d_place[adjacencies[device]] = i;
-                   
-                    lines.push_back(new_line);
-                    recursive(device);
-                    d_place[adjacencies[device]] = 0;
-                    lines.pop_back();
-                    places_used[i] = false;
+                    //Create line
+                    Line new_collider;
+                    new_collider.source = coordinates[device_placed[device_atual]];
+                    new_collider.target = coordinates[device_placed[adjacent_device]];
+                    count_intersections += countIntersections(new_collider, n_lines);
+                    lines[n_lines_new] = new_collider;
+                    n_lines_new++;
                 }
             }
+
+            recursive(next_device, num_intersections + count_intersections, n_lines_new);
+
+            device_placed[device_atual] = 0;
+            coordinates_used[coordinate] = false;
         }
     }
 }
 
 int main()
 {
-    int i;
-    cin >> n_places;
 
-    //cout<<"Number of places: "<<n_places<<endl;
+    cin >> n_coordinates;
 
-    for (i = 1; i <= n_places; i++)
+    for (int i = 1; i <= n_coordinates; i++)
     {
         Point p;
         cin >> p.x >> p.y;
+        p.id = i;
         coordinates[i] = p;
     }
 
-    //printCoordinates();
-
     cin >> n_devices >> n_colliders;
 
-    //cout<<"Number of devices: "<<n_devices<<endl;
-    //cout<<"Number of colliders: "<<n_colliders<<endl;
-
-    for (i = 1; i <= n_colliders; i++)
+    for (int i = 1; i <= n_colliders; i++)
     {
         int source, target;
         cin >> source >> target;
-
-        //coloca no vector de adjacencias os targets(d2) de d1
-        adjacencies[source] = target;
+        device_to_use[source] = device_to_use[target] = true;
+        adjacencies[source].push_back(target);
+        adjacencies[target].push_back(source);
     }
 
-    for (i = 1; i <= n_places; i++)
+    n_devices_to_place = 0;
+    for (int i = 1; i <= n_devices; i++)
     {
-        if (places_used[i] == false)
-            for (int j = 1; j <= n_devices; j++)
-            {
-                //ponto esta a ser usado neste instante
-                places_used[i] = true;
-                ///cout<<"place "<<i<< " used!!"<<endl;
-                d_place[j] = i;
-                //cout<<"device number  "<<j<< " associated with place "<<i<<endl;
-
-                //cout<<"doing recursive..."<<endl;
-                recursive(j + 1);
-                d_place[j] = 0;
-                places_used[i] = false;
-            }
+        if (device_to_use[i] == true)
+        {
+            n_devices_to_place++;
+        }
     }
+
+    best_case = 99999999;
+
+    //Get the first device
+    int first_device;
+    for (int device = 1; device <= n_devices; ++device)
+    {
+        if (device_to_use[device] == true)
+        {
+            first_device = device;
+            break;
+        }
+    }
+
+    //Get the second device
+    int second_device;
+    for (int device = first_device + 1; device <= n_devices; ++device)
+    {
+        if (device_to_use[device] == true)
+        {
+            second_device = device;
+            break;
+        }
+    }
+
+    for (int coordinate = 1; coordinate <= n_coordinates; coordinate++)
+    {
+        coordinates_used[coordinate] = true;
+        device_placed[first_device] = coordinate;
+        recursive(second_device, 0, 0);
+        device_placed[first_device] = 0;
+        coordinates_used[coordinate] = false;
+    }
+
+    cout << best_case << endl;
 
     return 0;
 }
