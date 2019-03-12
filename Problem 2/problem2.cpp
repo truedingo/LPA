@@ -7,9 +7,8 @@
 using namespace std;
 
 int n_events;
-
-
 int events[MAX_EVENTS][3];
+
 
 int main(){
 
