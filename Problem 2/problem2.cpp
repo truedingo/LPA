@@ -3,14 +3,11 @@
 #include <algorithm>
 
 #define MAX_EVENTS 10000
-#define LARGEST_DEADLINE 100000
 
 using namespace std;
 
 int n_events;
 int events[MAX_EVENTS][3];
-
-
 
 // A utility function to swap two elements
 void swap(int* a, int* b)
@@ -69,60 +66,46 @@ void quickSort( int low, int high)
 }
 
 
+
 int maximumProfit(){
-    //int count=0;
 
-
-    int max_deadline = events[n_events-1][0];
-    int events_table[n_events+1][max_deadline+1];
-    //cout<<"Max Deadline: "<< max_deadline<<endl;
+    int max_deadline = events[n_events-1][0];       // vai buscar a maior deadline
+    vector <vector<int> > events_table(n_events+1,vector<int>(max_deadline+1,-1)); //inicializa a matriz com -1
+                                                     //as linhas são eventos e as colunas é o t até à   
+                                                                     //maior deadline
     for (int t = 0; t <= max_deadline; t++){
-        events_table[0][t] = 0;
-        //cout<<events_table[0][t]<< " ";
+        events_table[0][t] = 0;             //incializa a primeira linha a zero
     }
-    //cout << '\n';
-    int i;
-    for (i=1; i <= n_events; i++){
-        int t;
-        for (t = 0; t<= max_deadline; t++){
-            int new_T  = min(t,events[i-1][0]) - events[i-1][1];
+    
+    
+    for (int i=1; i <=n_events; i++){
+        for (int t = 0; t<= max_deadline; t++){
+            int new_T  = min(t,events[i-1][0]) - events[i-1][1];    //vai ver qual é o t minimo  e subtrai a esse valor, a duração do evento
             if (new_T < 0){
-                events_table[i][t] = events_table[i-1][t];
+                events_table[i][t] = events_table[i-1][t]; //se o novo valor de t for menos que zero, a matriz é atualizada 
+                                                            // com o valor da linha anterior
             }
             else{
                 events_table[i][t] = max(events_table[i-1][t],events[i-1][2]+ events_table[i-1][new_T]);
+                //caso contrário, guarda o maior lucro entre o valor anterior e o o lucro do evento i-1 + o 
+                //valor que está na linha i-1 , na coluna do novo valor de t.
+
             }
-            //cout<<events_table[i][t]<< " ";
+        
         }
-        //cout<<endl;
-        //cout<<"T: "<<t<<endl;
-        //cout<<"I: "<<i<<endl;
-
-
+       
     }
-    //cout<< events_table[n_events-1][events[n_events-1][0]-1]<<endl;
-
-    return events_table[i-1][max_deadline];
+    return events_table[n_events][max_deadline];
 }
 
-
-
 int main(){
-
     cin>>n_events;
 
     for(int event=0;event<n_events;event++){
         cin>> events[event][0]>>events[event][1]>>events[event][2];
     }
-
-    quickSort(0,n_events-1);
-
-    //cout<<"Number of Events: "<<n_events<<endl;
-
-    /*for(int event=0;event<n_events;event++){
-        cout << "Deadline: " << events[event][0]<< " Duration: " <<events[event][1] << " Cost: " <<events[event][2] << endl;
-    }*/
-
+    quickSort(0,n_events-1);  //ordenar os eventos por deadline, de forma crescente
+    
     cout<<maximumProfit()<<endl;
     return 0;
 }
