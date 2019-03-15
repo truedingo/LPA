@@ -1,7 +1,1 @@
-Number of Events: 6
-Deadline: 4 Duration: 1 Cost: 3
-Deadline: 4 Duration: 1 Cost: 1
-Deadline: 4 Duration: 3 Cost: 4
-Deadline: 7 Duration: 3 Cost: 2
-Deadline: 7 Duration: 4 Cost: 5
-Deadline: 9 Duration: 1 Cost: 4
+257

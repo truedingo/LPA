@@ -1,0 +1,13 @@
+for every t ∈ {0,··· ,d}
+    [0, t] ← 0 
+end for
+for i : 1..n
+    for every t ∈ {0,··· ,d}
+    t′ ←min{t,di}−ti 
+    if t′ <0 then
+        B[i, t] ← B[i − 1, t] 
+    else
+        B[i,t]←max{B[i−1,t],gi +B[i−1,t′]} 
+    end if
+    end for 
+end for
