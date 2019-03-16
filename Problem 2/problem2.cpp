@@ -73,13 +73,16 @@ int maximumProfit(){
     vector <vector<int> > events_table(n_events+1,vector<int>(max_deadline+1,-1)); //inicializa a matriz com -1
                                                      //as linhas são eventos e as colunas é o t até à   
                                                                      //maior deadline
-    for (int t = 0; t <= max_deadline; t++){
+    for (int t = 1; t <= max_deadline; t++){
         events_table[0][t] = 0;             //incializa a primeira linha a zero
+    }
+    for (int event = 0; event <= n_events; event++){
+        events_table[event][0] = 0;             //incializa a primeira coluna a zero
     }
     
     
     for (int i=1; i <=n_events; i++){
-        for (int t = 0; t<= max_deadline; t++){
+        for (int t = 1; t<= max_deadline; t++){
             int new_T  = min(t,events[i-1][0]) - events[i-1][1];    //vai ver qual é o t minimo  e subtrai a esse valor, a duração do evento
             if (new_T < 0){
                 events_table[i][t] = events_table[i-1][t]; //se o novo valor de t for menos que zero, a matriz é atualizada 
