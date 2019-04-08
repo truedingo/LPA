@@ -65,22 +65,23 @@ void quickSort( int low, int high)
     }
 }
 
+/*
+    Esta função imprimir as soluções ótimas de modo a maximizar o lucro dos eventos.
+    Para correr esta função, basta tirar os comentários da linha 119 na função maximumProfit()
+
+
+*/
 void printOptimalSolution(vector<vector<int> > events_table, int i, int t){
    
-    if(i==0){
+    if(i==0)
         return;
-    }
-   
-    if(events_table[i][t]==events_table[i-1][t]){
+    if(events_table[i][t]==events_table[i-1][t])
         printOptimalSolution(events_table,i-1,t);
-       
-    }
     else{
         int newt = min(t,events[i-1][0])- events[i-1][1];
         printOptimalSolution(events_table,i-1,newt);
         cout<<"Event: "<<i-1 <<" Starting time: "<<newt<<" Ending time: "<<newt+events[i-1][1]<<" Deadline: "<<events[i-1][0]<<" Profit: "<<events[i-1][2]<<endl;
     }
-    
 }
 
 
@@ -115,8 +116,7 @@ int maximumProfit(){
         }
        
     }
-    printOptimalSolution(events_table, n_events,max_deadline);
-
+    //printOptimalSolution(events_table, n_events,max_deadline);
     return events_table[n_events][max_deadline];
 }
 
