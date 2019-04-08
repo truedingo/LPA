@@ -1,13 +1,19 @@
-for every t ∈ {0,··· ,d}
-    [0, t] ← 0 
-end for
-for i : 1..n
-    for every t ∈ {0,··· ,d}
-    t′ ←min{t,di}−ti 
-    if t′ <0 then
-        B[i, t] ← B[i − 1, t] 
-    else
-        B[i,t]←max{B[i−1,t],gi +B[i−1,t′]} 
-    end if
-    end for 
-end for
+Function maximumProfit():
+    for every j ∈ {1, ... ,d}
+        B[0, j] = 0 
+    end for
+    for every i ∈ {0, ... , n_events}
+        B[i,0] = 0
+    end for
+    for i : 1..n_events
+        for every t ∈ {1,··· ,d}
+            t′ = min{t,di} − ti 
+            if t′ < 0 then
+                B[i, t] = B[i − 1, t] 
+            else 
+                B[i,t] = max{B[i−1,t], gi +B[i−1,t′]} 
+            end if
+        end for 
+    end for
+
+    return B[n_events,d]

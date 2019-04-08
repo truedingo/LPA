@@ -65,14 +65,32 @@ void quickSort( int low, int high)
     }
 }
 
+void printOptimalSolution(vector<vector<int> > events_table, int i, int t){
+   
+    if(i==0){
+        return;
+    }
+   
+    if(events_table[i][t]==events_table[i-1][t]){
+        printOptimalSolution(events_table,i-1,t);
+       
+    }
+    else{
+        int newt = min(t,events[i-1][0])- events[i-1][1];
+        printOptimalSolution(events_table,i-1,newt);
+        cout<<events[i-1][2]<<endl;
+        cout<<"Schedule job: "<<i-1 <<" at time: "<<newt<<endl;
+    }
+    
+}
 
 
 int maximumProfit(){
-
     int max_deadline = events[n_events-1][0];       // vai buscar a maior deadline
     vector <vector<int> > events_table(n_events+1,vector<int>(max_deadline+1,-1)); //inicializa a matriz com -1
                                                      //as linhas são eventos e as colunas é o t até à   
                                                                      //maior deadline
+    
     for (int t = 1; t <= max_deadline; t++){
         events_table[0][t] = 0;             //incializa a primeira linha a zero
     }
@@ -98,8 +116,13 @@ int maximumProfit(){
         }
        
     }
+    printOptimalSolution(events_table, n_events,max_deadline);
+
     return events_table[n_events][max_deadline];
 }
+
+
+
 
 int main(){
     cin>>n_events;
@@ -109,6 +132,9 @@ int main(){
     }
     quickSort(0,n_events-1);  //ordenar os eventos por deadline, de forma crescente
     
+  
+
     cout<<maximumProfit()<<endl;
+   
     return 0;
 }
