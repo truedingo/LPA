@@ -78,8 +78,7 @@ void printOptimalSolution(vector<vector<int> > events_table, int i, int t){
     else{
         int newt = min(t,events[i-1][0])- events[i-1][1];
         printOptimalSolution(events_table,i-1,newt);
-        cout<<events[i-1][2]<<endl;
-        cout<<"Schedule job: "<<i-1 <<" at time: "<<newt<<endl;
+        cout<<"Event: "<<i-1 <<" Starting time: "<<newt<<" Ending time: "<<newt+events[i-1][1]<<" Deadline: "<<events[i-1][0]<<" Profit: "<<events[i-1][2]<<endl;
     }
     
 }

@@ -1,11 +1,6 @@
-70
-Schedule job: 2 at time: 1
-14
-Schedule job: 3 at time: 14
-75
-Schedule job: 6 at time: 18
-79
-Schedule job: 7 at time: 29
-19
-Schedule job: 8 at time: 61
+Event: 2 Starting time: 1 Ending time: 14 Deadline: 25 Profit: 70
+Event: 3 Starting time: 14 Ending time: 18 Deadline: 41 Profit: 14
+Event: 6 Starting time: 18 Ending time: 29 Deadline: 60 Profit: 75
+Event: 7 Starting time: 29 Ending time: 61 Deadline: 63 Profit: 79
+Event: 8 Starting time: 61 Ending time: 68 Deadline: 68 Profit: 19
 257
