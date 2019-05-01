@@ -3,6 +3,7 @@
 #include <iostream> 
 #include <vector>
 #include <queue> 
+#include <string>
 #define MAX_SEQUENCES 300
 #define MAX_PAIRWISE 5000
 
@@ -92,33 +93,35 @@ bool isBipartite()
 // Driver program to test above function 
 int main() 
 { 
+    string line;
    while(!cin.eof()){
+       n_sequences=0;
+       n_pairwises=0;
         cin>>n_sequences>>n_pairwises;
+  
+        if(n_sequences>0 && n_pairwises >0){
+            adj= init_graph(n_sequences);
 
-        adj= init_graph(n_sequences);
-
-        for(int i=0;i<n_pairwises;i++){
-            cin>>sequences[i][0]>>sequences[i][1];
-            //cout<<sequences[i][0]<<" "<<sequences[i][1]<<endl;
-            adj[sequences[i][0]-1][sequences[i][1]-1]=1;
-            adj[sequences[i][1]-1][sequences[i][0]-1]=1;
-        }
-        
-        /*
-        for(int i=0;i<n_sequences;i++){
-            for(int j=0;j<n_sequences;j++){
-                cout<<adj[i][j]<<" ";
+            for(int i=0;i<n_pairwises;i++){
+                cin>>sequences[i][0]>>sequences[i][1];
+                //cout<<sequences[i][0]<<" "<<sequences[i][1]<<endl;
+                adj[sequences[i][0]-1][sequences[i][1]-1]=1;
+                adj[sequences[i][1]-1][sequences[i][0]-1]=1;
             }
-            cout<<endl;
-        }*/
+            
+            /*
+            for(int i=0;i<n_sequences;i++){
+                for(int j=0;j<n_sequences;j++){
+                    cout<<adj[i][j]<<" ";
+                }
+                cout<<endl;
+            }*/
 
-        if(isBipartite())
-            cout<<"No"<<endl;
-        else
-            cout<<"Yes"<<endl;
-        
-
-        
+            if(isBipartite())
+                cout<<"No"<<endl;
+            else
+                cout<<"Yes"<<endl;
+            }
 
 
    }

@@ -1,80 +1,73 @@
-// C++ program to find out whether a 
-// given graph is Bipartite or not 
-#include <iostream> 
-#include <queue> 
+#include<iostream>
+#include <vector>
+#include <iostream>
+
+using namespace std;
+
 #define MAX_VERTEX 100
-using namespace std; 
 
+int graph[MAX_VERTEX][MAX_VERTEX];
+int vertexes;
+int visited[MAX_VERTEX];
+vector<int> result_cycle;
+int best =  9999999;;
+int actual_vertex;
 
-int n_vertex;
-int G[MAX_VERTEX][MAX_VERTEX];
-bool visited[MAX_VERTEX];
+void print_result(){
+  for(int i=0;i<(int)result_cycle.size();i++){
+    cout << result_cycle[i] << " ";
+  }
+  cout << endl;
+}
 
-// This function returns true if  
-
-int BFS(int src) 
-{ 
-    int solution=0;
-    for(int i=0;i<n_vertex;i++){
-        visited[i]=false;
-    }
-  
-    // Create a queue (FIFO) of vertex numbers a 
-    // nd enqueue source vertex for BFS traversal 
-    queue <int> q; 
-    visited[src] = true;
-    q.push(src); 
-  
-    // Run while there are vertices in queue (Similar to BFS) 
-    while (!q.empty()) 
-    { 
-        // Dequeue a vertex from queue ( Refer http://goo.gl/35oz8 ) 
-        int t = q.front(); 
-        
-        q.pop(); 
-  
-       
-        for (t = 0; t < n_vertex; t++) 
-        { 
-            for(int u=0;u<n_vertex;u++){
-                
-                if(G[t][u]==1){
-                    cout<<"T: "<<t<<" U: "<<u<<endl;
-                    if (!visited[u]) 
-                    { 
-                        visited[u] = true;
-                        q.push(u); 
-                        if(u==src){
-                            solution++;
-                           
-                        }
-                    }
-                }
-            }
-  
-           
-        } 
-    } 
-  
-    return solution;
-    
-} 
-  
-
-
-// Driver program to test above function 
-int main() 
-{ 
-    cin >> n_vertex;
-
-	
-	for (int i=0;i<n_vertex;i++){
-        for (int j=0;j<n_vertex;j++){
-            cin>>G[i][j];
+void DFS(int vertex){
+  visited[vertex] = 1;
+  if((int)result_cycle.size() >= best){
+    return;
+  }
+  for(int i=0; i < vertexes; i++){
+    if(graph[vertex][i]){
+      if(i == actual_vertex){
+        if((int)result_cycle.size() < best){
+          best = (int)result_cycle.size();
+          return;
         }
+      }
+      if(!visited[i]){
+        result_cycle.push_back(i);
+        DFS(i);
+        result_cycle.pop_back();
+        visited[i] = 0;
+      }
+    }
+  }
+}
+
+int main(){
+  int value;
+  
+  cin>>vertexes;
+  for(int i=0;i<vertexes; i++){
+    for(int j=0;j<vertexes; j++){
+      cin>>value;
+      graph[i][j] = value;
+    }
+  }
+
+  for(int i=0;i<vertexes; i++){
+
+    for(int j=0;j<vertexes; j++){
+      visited[j] = 0;
     }
 
-    cout<<BFS(0)<<endl;
-	return 0; 
-} 
+    result_cycle.push_back(i);
+    actual_vertex = i;
+    DFS(i);
+    result_cycle.clear();
 
+  }
+
+  cout << best << endl;
+
+  return 0;
+}
