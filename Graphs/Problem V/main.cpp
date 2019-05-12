@@ -14,19 +14,6 @@ int n_cities;
 int graph[500][500];
 int dist[500][500];
 
-void printSolution(){
-    for (int i = 0; i < n_cities; i++)
-    {
-        for (int j = 0; j < n_cities; j++)
-        {
-            if (dist[i][j] == -1)
-                printf("%7s", "INF");
-            else
-                printf ("%7d", dist[i][j]);
-        }
-        printf("\n");
-    }
-}
 
 
 
@@ -52,7 +39,7 @@ void floydWarshall(){
             }
         }
     }
-    //printSolution();
+    
 }
 
 
@@ -70,7 +57,7 @@ int main(){
              }
          }
     }
-    //memset(dist,0,n_cities*n_cities*sizeof(int));
+   
 
     floydWarshall();
 
