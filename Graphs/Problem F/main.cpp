@@ -13,13 +13,17 @@
 using namespace std;
 
 
-int m_pairwise, n_sequences;
+int n_trains;
+int n_pairs;
 
-vector<vector<int> > graph;
+int graph[500][500];
 
-vector<vector<int> > init_matrix(int m, int n){
-	vector<vector<int> > matrix(m, vector<int>(n,0));
-	return matrix;
+void reset(){
+    for(int i=0;i<n_trains;i++){
+        for(int j=0;j<n_trains;j++){
+            graph[i][j]=0;
+        }
+    }
 }
 
 bool isBipartiteUtil(int src, int colorArr[])
@@ -43,7 +47,7 @@ bool isBipartiteUtil(int src, int colorArr[])
         return false;
 
         // Find all non-colored adjacent vertices
-        for (int v = 0; v < n_sequences; ++v)
+        for (int v = 0; v < n_trains; ++v)
         {
             // An edge from u to v exists and
             // destination v is not colored
@@ -78,12 +82,12 @@ bool isBipartite()
     // The value 1 is used to indicate first color is
     // assigned and value 0 indicates second color is
     // assigned.
-    int colorArr[n_sequences];
-    for (int i = 0; i < n_sequences; ++i)
+    int colorArr[n_trains];
+    for (int i = 0; i < n_trains; ++i)
         colorArr[i] = -1;
 
     // This code is to handle disconnected graoh
-    for (int i = 0; i < n_sequences; i++){
+    for (int i = 0; i < n_trains; i++){
 			if (colorArr[i] == -1){
 	        if (isBipartiteUtil(i, colorArr) == false){
 						return false;
@@ -95,7 +99,23 @@ bool isBipartite()
 }
 
 int main(){
+    while(scanf("%d %d",&n_trains,&n_pairs)!=EOF){
+        reset();
+        for(int m=0 ; m<n_pairs ; m++){
+            int source, target;
+            cin>>source>>target;
+            graph[source-1][target-1]=1;
+            graph[target-1][source-1]=1;
+        }
 
+        if(isBipartite())
+            cout<<"NOT SURE"<<endl;
+        else
+        {
+            cout<<"NO"<<endl;
+        }
+        
+    }
 
 	return 0;
 }
