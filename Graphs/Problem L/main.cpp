@@ -10,85 +10,46 @@
 #include <sstream>
 using namespace std;
 
-vector<int> * graph;
-vector<int> low;
-vector<int> dfs;
-vector<int> used;
-vector<int> parent;
+#define MAX_CONNECTIONS 1000
 
-int nplaces;
-int d_time;
-int solution;
+typedef struct Node{
+  int x,y;
+}Node;
 
+typedef struct Connection{
+  int source, target;
+  double weight;
+}Connection;
 
-vector<vector<int> > init_matrix(int m, int n){
-	vector<vector<int> > matrix(m, vector<int>(n,-1));
-	return matrix;
-}
+int n_nodes;
+int n_connections;
+vector<Node> coordinates_vector;
+Connection connections[MAX_CONNECTIONS];
 
-void ART(int vertex){
-  low[vertex] = dfs[vertex] = d_time = d_time+1; // actualizar low e dfs com o descovery time
-  for(int i = 0; i < (int)graph[vertex].size(); i++){ // os vizinhos
-    int aux = graph[vertex][i];
-    if(dfs[aux] == -1){ // se ainda não foi visitado
-      parent[aux] = vertex;
-      ART(aux);
-      low[vertex] = min(low[vertex],low[aux]);
-			
-      if(dfs[vertex] != 1 && low[aux] >= dfs[vertex] && !used[vertex]){
-        // articulation point
-        //cout << "vertex: " << vertex  << endl;
-        used[vertex] = 1;
-        solution++;
-      }
-    }
-    else if(parent[vertex] != aux){
-      low[vertex] = min(low[vertex], dfs[aux]);
-    }
+void calculateWeight(){
+  for(int i=0;i<n_connections;i++){
+    connections[i].weight= (double) sqrt( fabs(coordinates_vector[connections[i].source -1].x -coordinates_vector[connections[i].target -1].x) * fabs(coordinates_vector[connections[i].source -1].x - coordinates_vector[connections[i].target -1].x) + fabs(coordinates_vector[connections[i].source -1].y - coordinates_vector[connections[i].target -1].y) * fabs(coordinates_vector[connections[i].source -1].y - coordinates_vector[connections[i].target -1].y));
+    cout<<connections[i].weight<<endl;
+   
   }
 }
 
-
-void reset(){
-    d_time = 0;
-    solution = 0;
-    graph = new vector<int>[nplaces]; // ou init_matrix com vector<vector<int> >
-    low = vector<int> (nplaces,0);
-    used = vector<int> (nplaces,0);
-    dfs = vector<int> (nplaces,-1);
-    parent = vector<int> (nplaces,-1);
-}
 
 int main(){
-  int aux;
-  while(1){
-    scanf("%d",&nplaces);
-    reset();
-
-    if(nplaces == 0){
-      break;
+  while(scanf("%d",&n_nodes)!=EOF){
+    for (int i=0;i<n_nodes;i++){
+      Node node;
+      cin>>node.x>>node.y;
+      coordinates_vector.push_back(node);
     }
-    while(1){
-      scanf("%d",&aux);
-      if(aux == 0){
-        break;
-      }
-      string line;
-      getline(cin,line);
-      stringstream ss(line);
-      int aux2;
-      while(ss >> aux2){
-        graph[aux-1].push_back(aux2-1);
-        graph[aux2-1].push_back(aux-1);
-      }
-    }
-
-    for(int i = 0; i < nplaces; i++){
-      if(dfs[i] == -1 ){
-        ART(i);
-      }
-    }
-    cout << solution << endl;
+   cin>>n_connections;
+   for(int m=0;m<n_connections;m++){
+     Connection conn;
+      cin>>conn.source>>conn.target;
+      connections[m] = conn;
+      calculateWeight();
+   }
+  
   }
-  return 0;
+  
 }
