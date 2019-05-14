@@ -10,6 +10,8 @@
 #define NODEBUG
 using namespace std;
 
+//articulation points and bridges
+
 vector<int> * graph; // lista de adjacencia
 vector<int> low;
 vector<int> dfs;
